@@ -11,6 +11,19 @@ class NodeTest < ActiveSupport::TestCase
     assert root.descendants.count == 4
   end
 
+  test "building from scratch simple" do
+    Node.delete_all
+
+    root = Node.new(name: 'Output', node_type: 'output')
+    action = Node.new(name: 'Action', node_type: 'action')
+    action2 = Node.new(name: 'Action2', node_type: 'action')
+    root.children << action
+    root.children << action2
+    root.save
+
+    assert root.descendants.count == 2
+  end
+
   test "building from scratch" do
     Node.delete_all
 
