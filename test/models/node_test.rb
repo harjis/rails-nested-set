@@ -25,8 +25,16 @@ class NodeTest < ActiveSupport::TestCase
     input = Node.create(name: 'Input', node_type: 'input')
     input.move_to_child_of(action3)
 
-    root.save
     assert root.descendants.count == 4
     assert action3.descendants.count == 1
+
+    action21 = Node.create(name: 'Action21', node_type: 'action')
+    input2 = Node.create(name: 'Input2', node_type: 'input')
+    input2.move_to_child_of(action21)
+    action21.move_to_child_of(action2)
+
+    root.reload
+    assert root.descendants.count == 6
+    assert action2.descendants.count == 2
   end
 end
