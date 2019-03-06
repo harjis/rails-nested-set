@@ -1,7 +1,32 @@
 require 'test_helper'
 
 class NodeTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "has root" do
+    nodes = Node.roots
+    assert nodes.count == 2
+  end
+
+  test "has children" do
+    root = Node.root
+    assert root.descendants.count == 4
+  end
+
+  test "building from scratch" do
+    Node.delete_all
+
+    root = Node.create(name: 'Output', node_type: 'output')
+    action = Node.create(name: 'Action', node_type: 'action')
+    action.move_to_child_of(root)
+    action2 = Node.create(name: 'Action2', node_type: 'action')
+    action2.move_to_child_of(root)
+    action3 = Node.create(name: 'Action3', node_type: 'action')
+    action3.move_to_child_of(root)
+
+    input = Node.create(name: 'Input', node_type: 'input')
+    input.move_to_child_of(action3)
+
+    root.save
+    assert root.descendants.count == 4
+    assert action3.descendants.count == 1
+  end
 end
